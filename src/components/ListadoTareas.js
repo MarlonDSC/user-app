@@ -5,18 +5,20 @@ import firebaseApp from "../credenciales";
 import { getFirestore, updateDoc, doc } from "firebase/firestore";
 const firestore = getFirestore(firebaseApp);
 
-const ListadoTareas = ({ arrayTareas, correoUsuario, setArrayTareas }) => {
+const ListadoTareas = ({ arrayTareas, setArrayTareas, empresa }) => {
+
   async function eliminarTarea(idTareaAEliminar) {
     // crear nuevo array de tareas
     const nvoArrayTareas = arrayTareas.filter(
       (objetoTarea) => objetoTarea.id !== idTareaAEliminar
     );
     // actualizar base de datos
-    const docuRef = doc(firestore, `Users/${correoUsuario}`);
+    const docuRef = doc(firestore, `Companies/${empresa}`);
     updateDoc(docuRef, { tareas: [...nvoArrayTareas] });
     //actualizar state
     setArrayTareas(nvoArrayTareas);
   }
+  
   return (
     <Container>
       <Stack>

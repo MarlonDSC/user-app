@@ -7,7 +7,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 const firestore = getFirestore(firebaseApp);
 const storage = getStorage(firebaseApp);
 
-const ArgegarTarea = ({ correoUsuario, setArrayTareas, arrayTareas }) => {
+const ArgegarTarea = ({ setArrayTareas, arrayTareas, empresa }) => {
   let urlDescarga;
 
   async function añadirTarea(e) {
@@ -23,7 +23,7 @@ const ArgegarTarea = ({ correoUsuario, setArrayTareas, arrayTareas }) => {
       },
     ];
     // actualizar base de datos
-    const docuRef = doc(firestore, `Users/${correoUsuario}`);
+    const docuRef = doc(firestore, `Companies/${empresa}`);
     updateDoc(docuRef, { tareas: [...nvoArrayTareas] });
     //actualizar estado
     setArrayTareas(nvoArrayTareas);

@@ -13,32 +13,25 @@ const firestore = getFirestore(firebaseApp);
 
 const Home = ({ correoUsuario }) => {
 
-    console.log(correoUsuario);
-
     const [arrayTareas, setArrayTareas] = useState(null);
-
-    const fakeData = [
-        { id: 1, descripcion: "Tarea falsa 1", url: "https://picsum.photos/420" },
-        { id: 2, descripcion: "Tarea falsa 2", url: "https://picsum.photos/420" },
-        { id: 3, descripcion: "Tarea falsa 3", url: "https://picsum.photos/420" },
-    ];
 
     const [user, setUser] = useState({})
 
     async function buscarDocumentoOCrearDocumento(idDocumento) {
-        const docRef = doc(firestore, `Users/${idDocumento}`);
+        console.log(idDocumento);
+        const docRef = doc(firestore, `Companies/${idDocumento}`);
         const consulta = await getDoc(docRef);
         if (consulta.exists()) {
             const infDoc = consulta.data();
-            setUser({ correoUsuario, ...consulta.data() })
+            console.log(infDoc.tareas);
             return infDoc.tareas;
         }
-        else {
-            setDoc(docRef, { tareas: [...fakeData] });
-            const consulta = await getDoc(docRef);
-            const infDoc = consulta.data();
-            return infDoc.tareas;
-        }
+        // else {
+        //     setDoc(docRef, { tareas: [...fakeData] });
+        //     const consulta = await getDoc(docRef);
+        //     const infDoc = consulta.data();
+        //     return infDoc.tareas;
+        // }
 
     }
 
@@ -48,14 +41,15 @@ const Home = ({ correoUsuario }) => {
         setUser({ correoUsuario, ...consulta.data() })
     }
 
-    useEffect(() => {
+    useEffect((e) => {
         async function fetchTareas() {
-            buscarEmpresa(correoUsuario);
-            const tareasFetchadas = await buscarDocumentoOCrearDocumento(correoUsuario);
+            await buscarEmpresa(correoUsuario);
+            console.log(user.empresa);
+            const tareasFetchadas = await buscarDocumentoOCrearDocumento(user.empresa);
             setArrayTareas(tareasFetchadas);
         }
         fetchTareas();
-    }, [])
+    }, [user.empresa])
 
     return <Container>
         <h4>
@@ -65,9 +59,9 @@ const Home = ({ correoUsuario }) => {
             Cerrar sesión
         </Button>
         <hr />
-        <AgregarTarea arrayTareas={arrayTareas} setArrayTareas={setArrayTareas} correoUsuario={correoUsuario} />
+        <AgregarTarea arrayTareas={arrayTareas} setArrayTareas={setArrayTareas} correoUsuario={correoUsuario} empresa = {user.empresa}/>
         {
-            arrayTareas ? <ListadoTareas arrayTareas={arrayTareas} setArrayTareas={setArrayTareas} correoUsuario={correoUsuario} />
+            arrayTareas ? <ListadoTareas arrayTareas={arrayTareas} setArrayTareas={setArrayTareas} correoUsuario={correoUsuario} empresa = {user.empresa} />
                 : null
         }
     </Container>
