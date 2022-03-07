@@ -42,17 +42,19 @@ const Home = ({ correoUsuario }) => {
 
     }
 
+    async function buscarEmpresa(idDocumento){
+        const docRef = doc(firestore, `Users/${idDocumento}`);
+        const consulta = await getDoc(docRef);
+        setUser({ correoUsuario, ...consulta.data() })
+    }
+
     useEffect(() => {
         async function fetchTareas() {
+            buscarEmpresa(correoUsuario);
             const tareasFetchadas = await buscarDocumentoOCrearDocumento(correoUsuario);
             setArrayTareas(tareasFetchadas);
         }
         fetchTareas();
-
-        // const getUser = async () => {
-        //     const snap = await getDoc(doc(firestore, `Users/${correoUsuario}`))
-        // }
-        // getUser()
     }, [])
 
     return <Container>
